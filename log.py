@@ -1,37 +1,50 @@
 import curses
-
+from button import Button, WriteLogButton, LogButton
+from scene import Scene, MainMenuScene, WriteLogScene
 
 logs = ["1/1/00 - Test", "1/2/00 - New Test!"]
 
-def display_menu(stdscr):
-    # Clear screen
-    stdscr.clear()
+def setup_scenes():
+    scenes = []
 
-    stdscr.addstr(stdscr.getyx()[0], 0, "Welcome to DAWS Industries (TM) Terminal Log", curses.color_pair(1))
-    stdscr.move(stdscr.getyx()[0] + 1, 0)
+    # Create the main menu
+    main_menu_scene = MainMenuScene()
+    write_log_scene = WriteLogScene()
 
-    stdscr.addstr(stdscr.getyx()[0] + 1, 0, "[WRITE NEW LOG]", curses.color_pair(1))
-    stdscr.move(stdscr.getyx()[0] + 2, 0)
-    
-    for i in range(len(logs)):
-        log = '[' + logs[i] + ']'
-        stdscr.addstr(stdscr.getyx()[0] + i, 0, log, curses.color_pair(1))
+    # Add scenes to the array
+    scenes.append(main_menu_scene)
+    scenes.append(write_log_scene)
 
-    stdscr.refresh()
+    return scenes
 
+def setup_buttons():
+    # Define the buttons array
+    buttons = []
+
+    # Create the "new log" button
+    write_log_button = WriteLogButton("CREATE NEW LOG")
+    buttons.append(write_log_button)
+
+    # Create a button for each existing log
+    for log in logs:
+        new_button = LogButton(log)
+        buttons.append(new_button)
+
+    return buttons
 
 def main(stdscr):
-    # Initialize curses and set the color scheme
-    curses.start_color()
-    curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
-    
-    # Use the color pair for the background
-    stdscr.bkgd(' ', curses.color_pair(1))
 
-    display_menu(stdscr)
+    scenes = setup_scenes()
+    buttons = setup_buttons()
 
-    # Wait for a key press
-    stdscr.getch()
+    # The index of the currently selected option
+    selection_index = 0
+
+    # Set the current scene index to 0 (main menu)
+    current_scene_index = 0
+
+    scenes[current_scene_index].display(stdscr, buttons, selection_index)
+            
 
 if __name__ == "__main__":
     curses.wrapper(main)
