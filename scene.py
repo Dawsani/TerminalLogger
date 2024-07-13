@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from curses.textpad import Textbox, rectangle
 import curses
 
 class Scene(ABC):
@@ -62,6 +63,22 @@ class WriteLogScene(Scene):
         # Move the curser down two lines
         stdscr.move(stdscr.getyx()[0] + 2, 0)
 
+        width = stdscr.getmaxyx()[1]
+        height = stdscr.getmaxyx()[0]
+
+        editwin = curses.newwin(height - 3, width - 3, 2,1)
+
+        rectangle(stdscr, 1, 0, height - 1, width - 2)
+
         stdscr.refresh()
 
-        stdscr.getch()
+        box = Textbox(editwin)
+
+        # Let the user edit until Ctrl-G is struck.
+        box.edit()
+
+        # Get resulting contents
+        message = box.gather()
+
+        self.logger.set_current_scene_index(0)
+        
