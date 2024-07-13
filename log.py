@@ -37,13 +37,10 @@ def main(stdscr):
     scenes = setup_scenes()
     buttons = setup_buttons()
 
-    # The index of the currently selected option
-    selection_index = 0
-
     # Set the current scene index to 0 (main menu)
     current_scene_index = 0
 
-    scenes[current_scene_index].display(stdscr, buttons, selection_index)
+    scenes[current_scene_index].display(stdscr, buttons)
             
 
 if __name__ == "__main__":
