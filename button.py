@@ -2,11 +2,9 @@ from abc import ABC, abstractmethod
 import curses
 
 class Button(ABC):
-
-    text = ""
-
-    def __init__(self, text):
+    def __init__(self, text, logger):
         self.text = '[' + text + ']'
+        self.logger = logger
 
     def display(self, stdscr, is_selected):
         if is_selected:
@@ -16,13 +14,13 @@ class Button(ABC):
         stdscr.move(stdscr.getyx()[0] + 1, 0)
 
     @abstractmethod
-    def on_press():
+    def on_press(self):
         pass
 
 class WriteLogButton(Button):
-    def on_press():
-        pass
+    def on_press(self):
+        self.logger.set_current_scene_index(1)
 
 class LogButton(Button):
-    def on_press():
+    def on_press(self):
         pass
